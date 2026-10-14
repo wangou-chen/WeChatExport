@@ -21,15 +21,13 @@ cd <项目根> ; python -m wxarchive all
 | **4.1.0.x**（实测 4.1.0.30） | ✅ 有 | **可用** |
 | 4.1.13 及以上（实测 4.1.13.65、4.1.15.13） | ❌ 无 | **不可用**（见 §8） |
 
-> ⚠️ **必须先禁止微信自动更新**，否则一旦升到 4.1.13+ 就再也取不到密钥。
-> 工具：`block_weixin_update_v2.ps1`（管理员运行 `-Apply`）。
 
 ## 2. 环境要求
 
 - Windows（内存扫描使用 Win32 API + `ctypes`）
 - Python **3.10+**
 - `pycryptodome`（必需）、`zstandard`（消息为 zstd 压缩，必需）
-- 微信正在运行且**已登录**（保持登录态即可，无需反复扫码）
+- 微信正在运行且**已登录**（保持登录态即可）
 
 ```powershell
 pip install pycryptodome zstandard
@@ -37,24 +35,13 @@ pip install pycryptodome zstandard
 
 ## 3. 快速开始
 
-> **可移植 + 零配置**：本工具不含任何机器特定的硬编码路径（已全量审计）；
+> **可移植 + 零配置**：本工具不含任何机器特定的硬编码路径；
 > 依赖缺失时会**自动回退到项目自带的 `lib/`**，因此无需手动设置 `PYTHONPATH`。
 
 ```powershell
-cd <项目根>
-
+cd <项目根目录>
 # 一键：取密钥 → 解密全部库 → 导出全部聊天记录
 python -m wxarchive all
-```
-
-**依赖**（二选一，任一即可）：
-
-```powershell
-# 方式 1：装到系统 Python（推荐，一劳永逸）
-pip install pycryptodome zstandard
-
-# 方式 2：什么都不装 —— 工具会自动使用项目自带 lib/ 内的副本
-#         （lib/ 为 gitignore 排除项；若从 git clone，请用方式 1）
 ```
 
 或使用一键脚本（自动定位 Python、检查依赖、提示版本；根目录自动取脚本所在目录）：
@@ -67,8 +54,8 @@ powershell -ExecutionPolicy Bypass -File .\oneclick.ps1
 
 | 报错 | 原因 | 解决 |
 |---|---|---|
-| `ModuleNotFoundError: No module named 'Crypto'` | 系统未装 pycryptodome，且项目 `lib/` 被删（如 git clone 后） | `pip install pycryptodome` |
-| `ModuleNotFoundError: No module named 'zstandard'` | 同上（zstd 解压消息需要） | `pip install zstandard` |
+| `ModuleNotFoundError: No module named 'Crypto'` | 系统未装 pycryptodome| `pip install pycryptodome` |
+| `ModuleNotFoundError: No module named 'zstandard'` | 系统未装 zstd | `pip install zstandard` |
 | `[错误] 未找到微信数据目录` | 微信未登录过 / 数据在非默认位置 | 用 `--db-dir`、`wxarchive.config.json` 或 `$env:WXARCHIVE_DB_DIR` |
 
 ### 路径解析优先级
@@ -80,7 +67,7 @@ powershell -ExecutionPolicy Bypass -File .\oneclick.ps1
 | 导出目录 | `--out` > 环境变量 `WXARCHIVE_OUT` > `<当前目录>\out` |
 | 密钥缓存 | `--keys-file` > 环境变量 `WXARCHIVE_KEYS` > `<导出目录>\all_keys.json` |
 
-> **关于「换了文件夹还是找到原来的库」**：自动探测的**探测源是微信自身的配置**
+> 自动探测的**探测源是微信自身的配置**
 > `%APPDATA%\Tencent\xwechat\config\*.ini`（内容是数据盘符，如 `E:\`），
 > 所以工具放在任何文件夹都会指向同一台机器上的同一份微信数据 —— **这是设计行为，不是硬编码**。
 > 用 `python -m wxarchive info` 可看**当前数据目录及其来源**；要锁定到别处，用下面任一方式。
@@ -106,7 +93,7 @@ python -m wxarchive all
 python -m wxarchive all --db-dir "D:\xwechat_files\your_wxid\db_storage"
 ```
 
-**安全行为**：以上三种「显式来源」若路径无效，程序会**直接报错退出**，绝不静默回退到别的目录。
+**安全行为**：以上三种「显式来源」若路径无效，程序会**直接报错退出**，不会回退到别的目录。
 密钥缓存也做了校验——若缓存的 salt 与当前库不符（说明是别的数据目录的缓存），会自动作废并重新扫描。
 
 **产物**
@@ -139,10 +126,10 @@ python -m wxarchive all --db-dir "D:\xwechat_files\your_wxid\db_storage"
 
 ```powershell
 python -m wxarchive chat --list                          # 先看有哪些会话
-python -m wxarchive chat --chat "翔铭"                    # 按显示名（支持子串）
-python -m wxarchive chat --chat "45452547735@chatroom"   # 按 username
+python -m wxarchive chat --chat "文件传输助手"             # 按显示名（支持子串）
+python -m wxarchive chat --chat "wxid_123456789"         # 按 username
 python -m wxarchive chat --chat "Msg_4bd000a4..."        # 按消息表名
-python -m wxarchive chat --chat "pubg" --limit 500        # 只要最近 500 条
+python -m wxarchive chat --chat "pubg" --limit 500       # 只要最近 500 条
 ```
 
 产物：`out\single\chat_<显示名>.json` 与 `.md`。
