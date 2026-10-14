@@ -18,9 +18,9 @@
 只读，不修改任何东西。
 
 用法：
-  set PYTHONPATH=C:\\Users\\Lenovo\\Desktop\\WeChatExport\\lib
+  set PYTHONPATH=<项目根>\\lib
   set PYTHONUTF8=1
-  C:\\Python314\\python.exe C:\\Users\\Lenovo\\Desktop\\WeChatExport\\scripts\\92_diag2.py
+  python <项目根>\\scripts\\92_diag2.py
 """
 import ctypes
 import ctypes.wintypes as wt
@@ -30,7 +30,7 @@ import re
 import subprocess
 import time
 
-BASE = r"C:\Users\Lenovo\Desktop\WeChatExport"
+BASE = os.environ.get('WXARCHIVE_BASE') or os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DB_DIR = os.path.join(BASE, "snapshot", "db_storage")
 LOG_DIR = os.path.join(BASE, "logs")
 

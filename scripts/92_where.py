@@ -3,7 +3,7 @@
 不再依赖人工填写 PID（微信崩溃重启后 PID 会变）。
 
 用法：
-  C:\\Python314\\python.exe 92_where.py
+  python 92_where.py
 """
 import ctypes
 import ctypes.wintypes as wt

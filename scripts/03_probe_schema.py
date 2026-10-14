@@ -5,14 +5,14 @@ Schema 探针 (S7 前置)
 不修改任何数据，只读。
 
 用法：
-  set PYTHONPATH=C:\\Users\\Lenovo\\Desktop\\WeChatExport\\lib
-  C:\\Python314\\python.exe C:\\Users\\Lenovo\\Desktop\\WeChatExport\\scripts\\03_probe_schema.py
+  set PYTHONPATH=<项目根>\\lib
+  python <项目根>\\scripts\\03_probe_schema.py
 """
 import os
 import json
 import sqlite3
 
-BASE = r"C:\Users\Lenovo\Desktop\WeChatExport"
+BASE = os.environ.get('WXARCHIVE_BASE') or os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DEC_DIR = os.path.join(BASE, "decrypted")
 LOG_DIR = os.path.join(BASE, "logs")
 

@@ -9,10 +9,10 @@ param(
 # Launch K independent single-threaded Python scanner processes (region modulo split),
 # then poll logs; abort the rest as soon as one reports FOUND.
 $ErrorActionPreference = "Continue"
-$py = "C:\Python314\python.exe"
-$script = "C:\Users\Lenovo\Desktop\WeChatExport\scripts\95_memscan_mp.py"
-$logdir = "C:\Users\Lenovo\Desktop\WeChatExport\logs"
-$keydir = "C:\Users\Lenovo\Desktop\WeChatExport\keys"
+$py = "python"
+$script = "<项目根>\scripts\95_memscan_mp.py"
+$logdir = "<项目根>\logs"
+$keydir = "<项目根>\keys"
 $env:PYTHONUTF8 = "1"
 
 $hits = @()

@@ -13,7 +13,7 @@
   24:28 change_counter
   28:32 page_count
 用法：
-  C:\\Python314\\python.exe 110_field_check.py --db <db> --key <64hex>
+  python 110_field_check.py --db <db> --key <64hex>
 """
 import argparse
 import hashlib

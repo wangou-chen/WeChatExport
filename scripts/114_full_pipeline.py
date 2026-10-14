@@ -9,8 +9,8 @@
 
 用法：
   set PYTHONUTF8=1
-  set PYTHONPATH=C:\\Users\\Lenovo\\Desktop\\WeChatExport\\lib
-  C:\\Python314\\python.exe 114_full_pipeline.py --db-dir <db_storage> [--out <dir>] [--skip-scan]
+  set PYTHONPATH=<项目根>\\lib
+  python 114_full_pipeline.py --db-dir <db_storage> [--out <dir>] [--skip-scan]
 """
 import argparse
 import ctypes
@@ -26,7 +26,7 @@ import subprocess
 import sys
 import time
 
-BASE = r"C:\Users\Lenovo\Desktop\WeChatExport"
+BASE = os.environ.get('WXARCHIVE_BASE') or os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TOOL = os.path.join(BASE, "tool", "wechat-decrypt-main")
 PAGESZ, SALT, MAC_OFF = 4096, 16, 4032
 kernel32 = ctypes.windll.kernel32

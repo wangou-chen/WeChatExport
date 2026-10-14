@@ -11,8 +11,8 @@ wechat-cli 的 crypto.py 关键点：
 
 用法：
   set PYTHONUTF8=1
-  set PYTHONPATH=C:\\Users\\Lenovo\\Desktop\\WeChatExport\\lib
-  C:\\Python314\\python.exe 106_decrypt_with_wal.py --key <64hex> --db <src.db> --out <dst.db>
+  set PYTHONPATH=<项目根>\\lib
+  python 106_decrypt_with_wal.py --key <64hex> --db <src.db> --out <dst.db>
 """
 import argparse
 import hashlib

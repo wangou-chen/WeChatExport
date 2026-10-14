@@ -32,18 +32,36 @@ pip install pycryptodome zstandard
 
 ## 3. 快速开始
 
+> **可移植**：本工具不含任何机器特定的硬编码路径（已全量审计）。
+> 整目录拷贝到任意位置即可运行；数据目录自动探测，也可用 `--db-dir` 或环境变量指定。
+
 ```powershell
 $env:PYTHONUTF8="1"
-$env:PYTHONPATH="C:\Users\Lenovo\Desktop\WeChatExport"          # 本目录
+$env:PYTHONPATH="<项目根>"          # 本目录（clone 后的路径）
 
 # 一键：取密钥 → 解密全部库 → 导出全部聊天记录
 python -m wxarchive all
 ```
 
-或使用一键脚本（含依赖检查与版本提示）：
+或使用一键脚本（内含依赖检查、版本提示、Python 自动定位；根目录自动取脚本所在目录）：
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\oneclick.ps1
+```
+
+### 路径解析优先级
+
+| 项 | 优先级 |
+|---|---|
+| 数据目录 `db_storage` | `--db-dir` > 环境变量 `WXARCHIVE_DB_DIR` > 自动探测（`%APPDATA%\Tencent\xwechat\config\*.ini` 指定的盘符 → `~\Documents\xwechat_files\*\db_storage`） |
+| 解密输出目录 | `--work` > 环境变量 `WXARCHIVE_WORK` > `<当前目录>\decrypted` |
+| 导出目录 | `--out` > 环境变量 `WXARCHIVE_OUT` > `<当前目录>\out` |
+| 密钥缓存 | `--keys-file` > 环境变量 `WXARCHIVE_KEYS` > `<导出目录>\all_keys.json` |
+
+```powershell
+# 例：用环境变量代替命令行参数（适合放进启动脚本）
+$env:WXARCHIVE_DB_DIR = "D:\xwechat_files\your_wxid\db_storage"
+python -m wxarchive all
 ```
 
 **产物**

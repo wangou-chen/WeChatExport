@@ -13,7 +13,7 @@
 
 用法：
   set PYTHONUTF8=1
-  C:\\Python314\\python.exe 97_scan_keyinfo_blobs.py --db <db> [--db-dir <dir>]
+  python 97_scan_keyinfo_blobs.py --db <db> [--db-dir <dir>]
 """
 import argparse
 import hashlib
@@ -64,8 +64,8 @@ def ident(cand, meta):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--db", default=r"E:\xwechat_files\all_users\login\wxid_usdvuhs727dr22\key_info.db")
-    ap.add_argument("--db-dir", default=r"E:\xwechat_files\wxid_usdvuhs727dr22_2291\db_storage")
+    ap.add_argument("--db", default=r"<数据盘>\xwechat_files\all_users\login\<你的wxid>\key_info.db")
+    ap.add_argument("--db-dir", default=r"<db_storage>")
     args = ap.parse_args()
 
     meta = targets("", args.db_dir)

@@ -15,8 +15,8 @@
 
 用法：
   set PYTHONUTF8=1
-  set PYTHONPATH=C:\\Users\\Lenovo\\Desktop\\WeChatExport\\lib\\frida_pkg
-  C:\\Python314\\python.exe -u 80_stackwalk_on_dbopen.py --db <db> [--seconds 180] [--out <json>]
+  set PYTHONPATH=<项目根>\\lib\\frida_pkg
+  python -u 80_stackwalk_on_dbopen.py --db <db> [--seconds 180] [--out <json>]
 """
 import argparse
 import hashlib
@@ -28,7 +28,7 @@ import time
 
 import frida
 
-BASE = r"C:\Users\Lenovo\Desktop\WeChatExport"
+BASE = os.environ.get('WXARCHIVE_BASE') or os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PAGESZ, SALT, MAC_OFF = 4096, 16, 4032
 
 JS = r"""

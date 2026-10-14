@@ -13,7 +13,7 @@
 命中判据：解密结果前 16 字节 == b"SQLite format 3\\x00"
 
 用法：
-  C:\\Python314\\python.exe 104_bruteforce_layout.py --db <db> --key <64hex>
+  python 104_bruteforce_layout.py --db <db> --key <64hex>
 """
 import argparse
 import hashlib

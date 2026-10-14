@@ -5,7 +5,7 @@ const path = require('path');
 
 const REPO = 'huohuoer/wechat-cli';
 const BRANCH = 'main';
-const DEST = 'C:\\Users\\Lenovo\\Desktop\\WeChatExport\\scripts\\wechat_cli_src';
+const DEST = path.join(__dirname, 'wechat_cli_src');
 const H = { 'User-Agent': 'dsh' };
 
 const FILES = [

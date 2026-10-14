@@ -7,7 +7,7 @@
 两个判据同时成立才算命中 —— 这能排除「只对前 16 字节巧合」的情况。
 
 用法：
-  C:\\Python314\\python.exe 108_align_layout.py --db <db> --key <64hex>
+  python 108_align_layout.py --db <db> --key <64hex>
 """
 import argparse
 import hashlib

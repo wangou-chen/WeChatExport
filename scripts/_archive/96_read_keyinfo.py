@@ -1,7 +1,7 @@
 """读取微信 key_info.db（未加密 SQLite）全部表与内容，寻找数据库密钥或其加密封装。
 
 用法：
-  C:\\Python314\\python.exe 96_read_keyinfo.py [--db <path>] [--full]
+  python 96_read_keyinfo.py [--db <path>] [--full]
 """
 import argparse
 import os
@@ -11,7 +11,7 @@ import sys
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--db", default=r"E:\xwechat_files\all_users\login\wxid_usdvuhs727dr22\key_info.db")
+    ap.add_argument("--db", default=r"<数据盘>\xwechat_files\all_users\login\<你的wxid>\key_info.db")
     ap.add_argument("--full", action="store_true", help="打印全部行（默认每表前 20 行）")
     args = ap.parse_args()
 

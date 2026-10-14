@@ -1,6 +1,6 @@
 # 微信 4.1.13.65 聊天记录导出 — 交接文档
 
-> 生成时间：2026-10-14 18:30 | 工作目录：`C:\Users\Lenovo\Desktop\WeChatExport` | file policy：workspace-write
+> 生成时间：2026-10-14 18:30 | 工作目录：`<项目根>` | file policy：workspace-write
 
 ## 0. 一句话状态
 
@@ -16,7 +16,7 @@
 | 主程序 | `D:\Program Files (x86)\Tencent\Weixin\Weixin.exe` | |
 | 主进程命令行 | `"...\Weixin.exe" --scene=taskbarpins` | `logs/proc_probe.json` |
 | 主进程特征 | 内存 380–550 MB，持有 198 MB `Weixin.dll`（映射自 `4.1.13.65\Weixin.dll`） | |
-| 数据目录 | `E:\xwechat_files\wxid_usdvuhs727dr22_2291\db_storage` | `%APPDATA%\Tencent\xwechat\config\51a1fffea11325a1e4104c6b3de47af7.ini` 内容为 `E:\` |
+| 数据目录 | `<db_storage>` | `%APPDATA%\Tencent\xwechat\config\51a1fffea11325a1e4104c6b3de47af7.ini` 内容为 `E:\` |
 | 库规模 | 26 个 .db，合计约 **1.1 GB**（message_0.db 180 MB） | |
 | 进程名 | `Weixin.exe`（主 + 多个 `--type=*` 子进程）、`WeChatAppEx.exe`（小程序/内嵌浏览器） | |
 
@@ -39,7 +39,7 @@ tag     = HMAC-SHA512(mac_key, 密文 || LE32(page_number))
 **预言机**：给定候选 32 字节，用上式校验 page 1 的 tag，误判概率 2^-512。
 自检命令（**已验证 PASS**）：
 ```powershell
-C:\Users\Lenovo\Desktop\WeChatExport\scripts\93_findkey_cs\KeyScan.exe selftest
+<项目根>\scripts\93_findkey_cs\KeyScan.exe selftest
 ```
 
 ## 3. 已排除的路径（都做过，别再重复）
@@ -91,9 +91,9 @@ scripts\wechat_extract_src\          # ou-o/wechat-extract README（含 WCDB/zst
 
 `20_decrypt.py` 用法（拿到 key 后）：
 ```powershell
-$env:PYTHONUTF8="1"; $env:PYTHONPATH="C:\Users\Lenovo\Desktop\WeChatExport\lib"
-C:\Python314\python.exe C:\Users\Lenovo\Desktop\WeChatExport\scripts\20_decrypt.py --key <64位hex>
-# 输出到 C:\Users\Lenovo\Desktop\WeChatExport\decrypted\db_storage\...
+$env:PYTHONUTF8="1"; $env:PYTHONPATH="<项目根>\lib"
+python <项目根>\scripts\20_decrypt.py --key <64位hex>
+# 输出到 <项目根>\decrypted\db_storage\...
 ```
 
 ## 6. 剩余两条可行路径（按性价比排序）

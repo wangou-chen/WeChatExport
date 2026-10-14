@@ -1,12 +1,12 @@
 # 仅在【普通会话免提权方案】失败时才需要本脚本
 # 以【管理员身份】运行的 PowerShell 中执行：
-#   powershell -NoProfile -ExecutionPolicy Bypass -File C:\Users\Lenovo\Desktop\WeChatExport\scripts\10_extract_keys_admin.ps1
+#   powershell -NoProfile -ExecutionPolicy Bypass -File <项目根>\scripts\10_extract_keys_admin.ps1
 #
 # 用途：从 Weixin.exe 进程内存提取各数据库的 SQLCipher raw key
 # 前置：微信必须处于登录运行状态
 
 $ErrorActionPreference = 'Stop'
-$base = 'C:\Users\Lenovo\Desktop\WeChatExport'
+$base = '<项目根>'
 $env:PYTHONPATH = Join-Path $base 'lib'
 $env:PYTHONUTF8 = '1'
 $env:PYTHONIOENCODING = 'utf-8'
@@ -30,7 +30,7 @@ if (-not $p) {
 Write-Host ("Weixin.exe PID={0}  内存={1} MB" -f $p.Id, [int]($p.WorkingSet64 / 1MB))
 
 Write-Host "`n=== 提取密钥 ===" -ForegroundColor Cyan
-$py = 'C:\Python314\python.exe'
+$py = 'python'
 $script = Join-Path $base 'scripts\01_extract_keys.py'
 & $py $script --pid $p.Id 2>&1 |
     Tee-Object -FilePath (Join-Path $base 'logs\extract_keys.log')

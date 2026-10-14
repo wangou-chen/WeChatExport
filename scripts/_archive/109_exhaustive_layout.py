@@ -19,8 +19,8 @@
   还含：SQLCipher「raw key 直用」模式
 
 用法：
-  set PYTHONPATH=C:\\Users\\Lenovo\\Desktop\\WeChatExport\\lib
-  C:\\Python314\\python.exe 109_exhaustive_layout.py --db <db> --key <64hex>
+  set PYTHONPATH=<项目根>\\lib
+  python 109_exhaustive_layout.py --db <db> --key <64hex>
 """
 import argparse
 import hashlib

@@ -16,7 +16,7 @@
   5. 结束后清除断点（DR7=0）并 DebugActiveProcessStop 干净分离。
 
 用法（在你的终端跑，微信需已运行）：
-  C:\\Python314\\python.exe -u 89_hwbreak_keyexp.py --pid <pid> --db <db> [--seconds 120]
+  python -u 89_hwbreak_keyexp.py --pid <pid> --db <db> [--seconds 120]
 """
 import argparse
 import ctypes
@@ -30,7 +30,7 @@ import subprocess
 import sys
 import time
 
-BASE = r"C:\Users\Lenovo\Desktop\WeChatExport"
+BASE = os.environ.get('WXARCHIVE_BASE') or os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PAGESZ, SALT, MAC_OFF = 4096, 16, 4032
 # 91 号扫描结果：RVA 0x5937203 处连续 13 个 AESKEYGENASSIST、常量成对 (1,1,2,2,4,4,8,8,10,10,20,20,40)
 # → AES-256 密钥扩展（SQLCipher 用 AES-256）。函数入口在其前若干字节，一并作为断点候选。

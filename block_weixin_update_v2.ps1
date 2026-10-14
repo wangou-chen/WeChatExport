@@ -25,7 +25,7 @@ param(
     [switch]$Apply,
     [switch]$Restore,
     [string]$InstallDir = "D:\Program Files (x86)\Tencent\Weixin",
-    [string]$BackupDir = "C:\Users\Lenovo\Desktop\WeChatExport\update_block_backup"
+    [string]$BackupDir = "<项目根>\update_block_backup"
 )
 
 $ErrorActionPreference = "Continue"

@@ -5,7 +5,7 @@ const path = require('path');
 const zlib = require('zlib');
 
 const URL = 'https://codeload.github.com/ou-o/wechat-extract/zip/refs/heads/main';
-const DEST = 'C:\\Users\\Lenovo\\Desktop\\WeChatExport\\scripts\\wechat_extract_src';
+const DEST = path.join(__dirname, 'wechat_extract_src');
 
 function findEOCD(buf) {
   for (let i = buf.length - 22; i >= 0 && i > buf.length - 70000; i--) {

@@ -6,7 +6,7 @@
   3. 打印窗口标题确认操作对象。
 
 用法：
-  C:\\Python314\\python.exe 51_trigger_wechat.py [--text a]
+  python 51_trigger_wechat.py [--text a]
 """
 import argparse
 import ctypes

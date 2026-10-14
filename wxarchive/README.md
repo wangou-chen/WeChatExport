@@ -12,10 +12,10 @@
 
 ```powershell
 # 方式 A：直接使用（把本目录放入 PYTHONPATH）
-$env:PYTHONPATH = "C:\Users\Lenovo\Desktop\WeChatExport;C:\Users\Lenovo\Desktop\WeChatExport\lib"
+$env:PYTHONPATH = "<项目根>;<项目根>\lib"
 
 # 方式 B：安装为包（会注册 wxarchive 命令）
-pip install -e C:\Users\Lenovo\Desktop\WeChatExport
+pip install -e <项目根>
 ```
 
 依赖：`pycryptodome`（必需）、`zstandard`（消息压缩必需）。Windows 自带 `ctypes`，无需 `frida`。
@@ -24,11 +24,11 @@ pip install -e C:\Users\Lenovo\Desktop\WeChatExport
 
 ```powershell
 $env:PYTHONUTF8 = "1"
-$env:PYTHONPATH = "C:\Users\Lenovo\Desktop\WeChatExport;C:\Users\Lenovo\Desktop\WeChatExport\lib"
-C:\Python314\python.exe -m wxarchive all `
-  --db-dir "E:\xwechat_files\<你的wxid>_<后缀>\db_storage" `
-  --work   "C:\Users\Lenovo\Desktop\WeChatExport\decrypted" `
-  --out    "C:\Users\Lenovo\Desktop\WeChatExport\out"
+$env:PYTHONPATH = "<项目根>;<项目根>\lib"
+python -m wxarchive all `
+  --db-dir "<数据盘>\xwechat_files\<你的wxid>_<后缀>\db_storage" `
+  --work   "<项目根>\decrypted" `
+  --out    "<项目根>\out"
 ```
 
 `--db-dir` 可省略（自动读 `%APPDATA%\Tencent\xwechat\config\*.ini` 定位盘符）。
@@ -62,21 +62,21 @@ C:\Python314\python.exe -m wxarchive all `
 
 ```powershell
 # 先看有哪些会话可选
-C:\Python314\python.exe -m wxarchive chat --list --work .\decrypted
+python -m wxarchive chat --list --work .\decrypted
 
 # 按显示名（支持子串）
-C:\Python314\python.exe -m wxarchive chat --chat "翔铭"   --work .\decrypted --out .\out\single
-C:\Python314\python.exe -m wxarchive chat --chat "pubg"   --work .\decrypted --out .\out\single
+python -m wxarchive chat --chat "翔铭"   --work .\decrypted --out .\out\single
+python -m wxarchive chat --chat "pubg"   --work .\decrypted --out .\out\single
 
 # 按 username
-C:\Python314\python.exe -m wxarchive chat --chat "45452547735@chatroom" --work .\decrypted --out .\out\single
-C:\Python314\python.exe -m wxarchive chat --chat "wxid_mbkcd21pnfrc22"  --work .\decrypted --out .\out\single
+python -m wxarchive chat --chat "<群ID>@chatroom" --work .\decrypted --out .\out\single
+python -m wxarchive chat --chat "<某联系人的wxid>"  --work .\decrypted --out .\out\single
 
 # 按消息表名或其 hash
-C:\Python314\python.exe -m wxarchive chat --chat "Msg_4bd000a41580553ff94c8a591518a505" --work .\decrypted --out .\out\single
+python -m wxarchive chat --chat "Msg_4bd000a41580553ff94c8a591518a505" --work .\decrypted --out .\out\single
 
 # 只要最近 500 条
-C:\Python314\python.exe -m wxarchive chat --chat "pubg" --limit 500 --work .\decrypted --out .\out\single
+python -m wxarchive chat --chat "pubg" --limit 500 --work .\decrypted --out .\out\single
 ```
 
 产物：`out\single\chat_<显示名>.json` 与 `chat_<显示名>.md`（单文件，含时间/发送者/内容）。
@@ -181,13 +181,13 @@ pyproject.toml
 
 ```powershell
 # 预览（不做任何改动）
-powershell -ExecutionPolicy Bypass -File C:\Users\Lenovo\Desktop\WeChatExport\block_weixin_update.ps1
+powershell -ExecutionPolicy Bypass -File <项目根>\block_weixin_update.ps1
 
 # 执行：防火墙封更新器 + hosts 封下载域 + 删自启项 + 更新器改名
-powershell -ExecutionPolicy Bypass -File C:\Users\Lenovo\Desktop\WeChatExport\block_weixin_update.ps1 -Apply -RenameUpdater
+powershell -ExecutionPolicy Bypass -File <项目根>\block_weixin_update.ps1 -Apply -RenameUpdater
 
 # 回滚
-powershell -ExecutionPolicy Bypass -File C:\Users\Lenovo\Desktop\WeChatExport\block_weixin_update.ps1 -Restore
+powershell -ExecutionPolicy Bypass -File <项目根>\block_weixin_update.ps1 -Restore
 ```
 
 四层阻断（各自独立生效，按可靠性排序）：

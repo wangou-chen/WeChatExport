@@ -24,7 +24,7 @@ param(
     [switch]$Restore,
     [switch]$RenameUpdater,
     [string]$InstallDir = "",
-    [string]$BackupDir = "C:\Users\Lenovo\Desktop\WeChatExport\update_block_backup"
+    [string]$BackupDir = "<项目根>\update_block_backup"
 )
 
 $ErrorActionPreference = "Continue"

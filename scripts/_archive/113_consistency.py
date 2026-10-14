@@ -4,7 +4,7 @@
 同时打印：把解密产物按 4096 切开后，统计各页首字节分布（合法 b-tree 页类型应占比很高）。
 
 用法：
-  C:\\Python314\\python.exe 113_consistency.py --enc <原始加密db> --dec <解密产物>
+  python 113_consistency.py --enc <原始加密db> --dec <解密产物>
 """
 import argparse
 import collections

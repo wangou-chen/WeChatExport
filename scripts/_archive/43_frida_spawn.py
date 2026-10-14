@@ -11,8 +11,8 @@
 
 用法：
   set PYTHONUTF8=1
-  set PYTHONPATH=C:\\Users\\Lenovo\\Desktop\\WeChatExport\\lib\\frida_pkg
-  C:\\Python314\\python.exe 43_frida_spawn.py [--exe <Weixin.exe>] [--seconds 180] [--no-resume]
+  set PYTHONPATH=<项目根>\\lib\\frida_pkg
+  python 43_frida_spawn.py [--exe <Weixin.exe>] [--seconds 180] [--no-resume]
 """
 import argparse
 import json
@@ -22,7 +22,7 @@ import time
 
 import frida
 
-BASE = r"C:\Users\Lenovo\Desktop\WeChatExport"
+BASE = os.environ.get('WXARCHIVE_BASE') or os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LOG = os.path.join(BASE, "logs")
 DEFAULT_EXE = r"D:\Program Files (x86)\Tencent\Weixin\Weixin.exe"
 

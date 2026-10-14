@@ -10,8 +10,8 @@
 判据：page1 明文[16:18] == 0x1000
 
 用法：
-  set PYTHONPATH=C:\\Users\\Lenovo\\Desktop\\WeChatExport\\lib
-  C:\\Python314\\python.exe 111_scan_kdf_iter.py --db <db> --key <64hex> [--max-iter 400000]
+  set PYTHONPATH=<项目根>\\lib
+  python 111_scan_kdf_iter.py --db <db> --key <64hex> [--max-iter 400000]
 """
 import argparse
 import hashlib

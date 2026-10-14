@@ -7,11 +7,11 @@
 
 用法（请在你自己的 PowerShell 里跑，令牌正常，微信可正常读写 E:）：
   $env:PYTHONUTF8="1"
-  $env:PYTHONPATH="C:\\Users\\Lenovo\\Desktop\\WeChatExport\\lib\\frida_pkg"
-  C:\\Python314\\python.exe -u 78_suspended_wait_hook.py `
-      --db "E:\\xwechat_files\\wxid_usdvuhs727dr22_2291\\db_storage\\message\\message_0.db" `
+  $env:PYTHONPATH="<项目根>\\lib\\frida_pkg"
+  python -u 78_suspended_wait_hook.py `
+      --db "E:\\xwechat_files\\<你的wxid>_<后缀>\\db_storage\\message\\message_0.db" `
       --lo 0x3486000 --hi 0x3486400 --step 8 --seconds 150 `
-      --out C:\\Users\\Lenovo\\Desktop\\WeChatExport\\keys\\key.json
+      --out <项目根>\\keys\\key.json
 """
 import argparse
 import ctypes
@@ -25,7 +25,7 @@ import time
 
 import frida
 
-BASE = r"C:\Users\Lenovo\Desktop\WeChatExport"
+BASE = os.environ.get('WXARCHIVE_BASE') or os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 EXE = r"D:\Program Files (x86)\Tencent\Weixin\Weixin.exe"
 CMDLINE = '"%s" --scene=taskbarpins' % EXE
 kernel32 = ctypes.windll.kernel32

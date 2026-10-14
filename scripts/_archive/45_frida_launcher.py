@@ -13,8 +13,8 @@ S5-m4 —— 启动器子进程门控抓密钥（Windows / 本机沙箱约束下
 
 用法：
   set PYTHONUTF8=1
-  set PYTHONPATH=C:\\Users\\Lenovo\\Desktop\\WeChatExport\\lib\\frida_pkg
-  C:\\Python314\\python.exe -u 45_frida_launcher.py [--exe <Weixin.exe>] [--seconds 300]
+  set PYTHONPATH=<项目根>\\lib\\frida_pkg
+  python -u 45_frida_launcher.py [--exe <Weixin.exe>] [--seconds 300]
 """
 import argparse
 import ctypes
@@ -26,7 +26,7 @@ import time
 
 import frida
 
-BASE = r"C:\Users\Lenovo\Desktop\WeChatExport"
+BASE = os.environ.get('WXARCHIVE_BASE') or os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LOG = os.path.join(BASE, "logs")
 DEFAULT_EXE = r"D:\Program Files (x86)\Tencent\Weixin\Weixin.exe"
 

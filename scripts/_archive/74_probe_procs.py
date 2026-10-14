@@ -13,7 +13,7 @@
   4. 输出 JSON 供下一步使用。
 
 用法：
-  C:\\Python314\\python.exe 74_probe_procs.py [--out <json>]
+  python 74_probe_procs.py [--out <json>]
 """
 import argparse
 import ctypes
@@ -129,7 +129,7 @@ def procs():
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--out", default=r"C:\Users\Lenovo\Desktop\WeChatExport\logs\proc_probe.json")
+    ap.add_argument("--out", default=r"<项目根>\logs\proc_probe.json")
     args = ap.parse_args()
     res = []
     for pid, name, mb in sorted(procs(), key=lambda x: -x[2]):

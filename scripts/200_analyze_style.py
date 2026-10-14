@@ -2,7 +2,7 @@
 
 用法：
   set PYTHONUTF8=1
-  C:\\Python314\\python.exe 200_analyze_style.py --chat 翔铭 --me 🎐
+  python 200_analyze_style.py --chat 翔铭 --me 🎐
 """
 import argparse
 import collections
@@ -13,7 +13,7 @@ import os
 import re
 import sys
 
-BASE = r"C:\Users\Lenovo\Desktop\WeChatExport"
+BASE = os.environ.get('WXARCHIVE_BASE') or os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # 常见语气词/口头禅候选（中文）
 PARTICLES = ["啊", "呀", "吧", "呢", "吗", "嘛", "哦", "噢", "喔", "诶", "唉", "哎", "哈",

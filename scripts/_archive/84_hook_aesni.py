@@ -14,8 +14,8 @@
 
 用法：
   set PYTHONUTF8=1
-  set PYTHONPATH=C:\\Users\\Lenovo\\Desktop\\WeChatExport\\lib\\frida_pkg
-  C:\\Python314\\python.exe -u 84_hook_aesni.py --db <db> [--pid N] [--base 0x...] [--seconds 120]
+  set PYTHONPATH=<项目根>\\lib\\frida_pkg
+  python -u 84_hook_aesni.py --db <db> [--pid N] [--base 0x...] [--seconds 120]
 """
 import argparse
 import hashlib
@@ -28,7 +28,7 @@ import time
 
 import frida
 
-BASE = r"C:\Users\Lenovo\Desktop\WeChatExport"
+BASE = os.environ.get('WXARCHIVE_BASE') or os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PAGESZ, SALT, MAC_OFF = 4096, 16, 4032
 DEFAULT_BASE = "0x7ffc927d0000"
 # 从 logs/aes_ni.json 得到的候选 RVA（密钥扩展区 + 少量解密点）

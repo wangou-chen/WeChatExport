@@ -9,7 +9,7 @@ S5-k —— 目标化候选扫描：不逐字节滑动，而是直接在内存�
 
 用法：
   set PYTHONUTF8=1
-  C:\\Python314\\python.exe 98_targeted_scan.py --pid 16056 --db <db> --part 0/8 [--salt-window 512]
+  python 98_targeted_scan.py --pid 16056 --db <db> --part 0/8 [--salt-window 512]
 """
 import argparse
 import base64

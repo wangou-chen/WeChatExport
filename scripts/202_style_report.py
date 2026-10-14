@@ -4,8 +4,8 @@
 
 用法：
   set PYTHONUTF8=1
-  C:\\Python314\\python.exe 202_style_report.py --chat 小狗媳妇 --who "小狗媳妇 ᝰꫛꫀꪝ" --pronoun 她 --label 小狗媳妇
-  C:\\Python314\\python.exe 202_style_report.py --chat 翔铭 --pronoun 他
+  python 202_style_report.py --chat 小狗媳妇 --who "小狗媳妇 ᝰꫛꫀꪝ" --pronoun 她 --label 小狗媳妇
+  python 202_style_report.py --chat 翔铭 --pronoun 他
 """
 import argparse
 import collections
@@ -16,7 +16,7 @@ import os
 import re
 import sys
 
-BASE = r"C:\Users\Lenovo\Desktop\WeChatExport"
+BASE = os.environ.get('WXARCHIVE_BASE') or os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 EMOJI_RE = re.compile("[\U0001F300-\U0001FAFF\U00002600-\U000027BF\U0001F000-\U0001F2FF\uFE0F]")
 TAG_RE = re.compile(r"^\[[^\[\]]{1,12}\]$")

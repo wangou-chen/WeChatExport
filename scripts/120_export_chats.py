@@ -11,8 +11,8 @@
 
 用法：
   set PYTHONUTF8=1
-  set PYTHONPATH=C:\\Users\\Lenovo\\Desktop\\WeChatExport\\lib
-  C:\\Python314\\python.exe 120_export_chats.py [--dec <dir>] [--out <dir>] [--limit N]
+  set PYTHONPATH=<项目根>\\lib
+  python 120_export_chats.py [--dec <dir>] [--out <dir>] [--limit N]
 """
 import argparse
 import glob
@@ -24,7 +24,7 @@ import sqlite3
 import sys
 import time
 
-BASE = r"C:\Users\Lenovo\Desktop\WeChatExport"
+BASE = os.environ.get('WXARCHIVE_BASE') or os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DEC_DIR = os.path.join(BASE, "decrypted")
 OUT_DIR = os.path.join(BASE, "out")
 SESSION_NAMES = {}

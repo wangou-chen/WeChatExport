@@ -12,8 +12,8 @@ S5-h —— SQLCipher 4 页面级解密（weixin 4.x 的加密库格式）
 
 用法：
   set PYTHONUTF8=1
-  set PYTHONPATH=C:\\Users\\Lenovo\\Desktop\\WeChatExport\\lib
-  C:\\Python314\\python.exe 20_decrypt.py --key <64hex> [--db-dir <dir>] [--out <dir>]
+  set PYTHONPATH=<项目根>\\lib
+  python 20_decrypt.py --key <64hex> [--db-dir <dir>] [--out <dir>]
                                           [--only message\\message_0.db] [--verify-only]
 """
 import argparse
@@ -24,7 +24,7 @@ import struct
 import sys
 import time
 
-BASE = r"C:\Users\Lenovo\Desktop\WeChatExport"
+BASE = os.environ.get('WXARCHIVE_BASE') or os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DB_DIR = os.path.join(BASE, "snapshot", "db_storage")
 OUT_DIR = os.path.join(BASE, "decrypted")
 PAGESZ = 4096

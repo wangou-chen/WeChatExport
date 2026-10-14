@@ -5,7 +5,7 @@
       VM_WRITE 被拒（err=5），所以无法跨进程写代码，hook 一律走 Frida 注入。
 
 用法：
-  C:\\Python314\\python.exe 73_kill_wechat.py [--wait 20]
+  python 73_kill_wechat.py [--wait 20]
 """
 import argparse
 import ctypes

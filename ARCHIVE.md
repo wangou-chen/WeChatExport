@@ -1,7 +1,7 @@
 # 微信聊天记录导出 —— 完整归档（2026-10-14）
 
-> 工作目录：`C:\Users\Lenovo\Desktop\WeChatExport`
-> 目标账号：`wxid_usdvuhs727dr22`（本机唯一账号）
+> 工作目录：`<项目根>`
+> 目标账号：`<你的wxid>`（本机唯一账号）
 > 最终结果：**677 会话 / 7,303 联系人 / 460,691 条消息**已导出
 
 ---
@@ -49,25 +49,25 @@ WAL:        帧 = 24B 帧头 + 4096B 页；用同一 enc_key 解帧后按 pgno �
 ### 一键执行（推荐）
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File C:\Users\Lenovo\Desktop\WeChatExport\oneclick.ps1
+powershell -ExecutionPolicy Bypass -File <项目根>\oneclick.ps1
 ```
 
 或直接用我们的库：
 
 ```powershell
 $env:PYTHONUTF8="1"
-$env:PYTHONPATH="C:\Users\Lenovo\Desktop\WeChatExport;C:\Users\Lenovo\Desktop\WeChatExport\lib"
-C:\Python314\python.exe -m wxarchive all `
-  --db-dir "E:\xwechat_files\wxid_usdvuhs727dr22_2291\db_storage" `
-  --work "C:\Users\Lenovo\Desktop\WeChatExport\decrypted" `
-  --out  "C:\Users\Lenovo\Desktop\WeChatExport\out"
+$env:PYTHONPATH="<项目根>;<项目根>\lib"
+python -m wxarchive all `
+  --db-dir "<db_storage>" `
+  --work "<项目根>\decrypted" `
+  --out  "<项目根>\out"
 ```
 
 `oneclick.ps1` 与 `python -m wxarchive all` 都会自动完成：找 Python → 校验版本（提示 4.0.x）→
 检查依赖 → 自动定位 `db_storage` → 扫内存取全部密钥 → 解密全部库（raw-key 模式 + WAL 回填）
 → 导出 JSON/MD/INDEX → 打印汇总。**不依赖任何外部逆向工具。**
 
-**自足库（本项目原创）**：`C:\Users\Lenovo\Desktop\WeChatExport\wxarchive\`
+**自足库（本项目原创）**：`<项目根>\wxarchive\`
 （模块：`crypto` / `keys` / `decrypt` / `sessions` / `export` / `cli`；文档见 `wxarchive\README.md`）
 
 ### 环境准备（一次性）
@@ -81,15 +81,15 @@ pip install zstandard               # WCDATA_CT=4 时的 zstd 解压
 
 | 用途 | 绝对路径 |
 |---|---|
-| 数据目录（微信 4.x） | `E:\xwechat_files\wxid_usdvuhs727dr22_2291\db_storage` |
+| 数据目录（微信 4.x） | `<db_storage>` |
 | 数据目录配置来源 | `%APPDATA%\Tencent\xwechat\config\51a1fffea11325a1e4104c6b3de47af7.ini`（内容 = `E:\`） |
-| 参考解密实现 | `C:\Users\Lenovo\Desktop\WeChatExport\tool\wechat-decrypt-main\decrypt_db.py` |
-| 参考密钥扫描 | `C:\Users\Lenovo\Desktop\WeChatExport\tool\wechat-decrypt-main\find_all_keys.py` |
-| 本项目总驱动 | `C:\Users\Lenovo\Desktop\WeChatExport\scripts\114_full_pipeline.py` |
-| 导出器 | `C:\Users\Lenovo\Desktop\WeChatExport\scripts\120_export_chats.py` |
-| 一键脚本 | `C:\Users\Lenovo\Desktop\WeChatExport\tool\oneclick.ps1` |
-| 解密产物 | `C:\Users\Lenovo\Desktop\WeChatExport\decrypted\` |
-| 导出产物 | `C:\Users\Lenovo\Desktop\WeChatExport\out\` |
+| 参考解密实现 | `<项目根>\tool\wechat-decrypt-main\decrypt_db.py` |
+| 参考密钥扫描 | `<项目根>\tool\wechat-decrypt-main\find_all_keys.py` |
+| 本项目总驱动 | `<项目根>\scripts\114_full_pipeline.py` |
+| 导出器 | `<项目根>\scripts\120_export_chats.py` |
+| 一键脚本 | `<项目根>\tool\oneclick.ps1` |
+| 解密产物 | `<项目根>\decrypted\` |
+| 导出产物 | `<项目根>\out\` |
 
 ### 三条命令（可复现）
 
@@ -99,13 +99,13 @@ Get-Process Weixin | Select-Object Id,WorkingSet64
 
 # 1) 扫内存取全部密钥 + 解密全部库（raw-key 模式）
 $env:PYTHONUTF8="1"
-$env:PYTHONPATH="C:\Users\Lenovo\Desktop\WeChatExport\lib"
-C:\Python314\python.exe -u C:\Users\Lenovo\Desktop\WeChatExport\scripts\114_full_pipeline.py `
-  --db-dir "E:\xwechat_files\wxid_usdvuhs727dr22_2291\db_storage" `
-  --out    "C:\Users\Lenovo\Desktop\WeChatExport\decrypted"
+$env:PYTHONPATH="<项目根>\lib"
+python -u <项目根>\scripts\114_full_pipeline.py `
+  --db-dir "<db_storage>" `
+  --out    "<项目根>\decrypted"
 
 # 2) 导出聊天记录
-C:\Python314\python.exe -u C:\Users\Lenovo\Desktop\WeChatExport\scripts\120_export_chats.py
+python -u <项目根>\scripts\120_export_chats.py
 ```
 
 ### 输出

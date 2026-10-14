@@ -9,9 +9,9 @@ param(
 # Multi-part memory key scan launcher.
 # Usage: .\94_scan.ps1 -TargetPid 16056 -DbFile <db> -Stride 8 -Parts 4 [-Max N] [-Tag name]
 $ErrorActionPreference = "Continue"
-$dir = "C:\Users\Lenovo\Desktop\WeChatExport\scripts\93_findkey_cs"
+$dir = "<项目根>\scripts\93_findkey_cs"
 $exe = Join-Path $dir "KeyScan.exe"
-$logdir = "C:\Users\Lenovo\Desktop\WeChatExport\logs"
+$logdir = "<项目根>\logs"
 
 $common = @()
 if ($Max -gt 0) { $common += @("--max", "$Max") }

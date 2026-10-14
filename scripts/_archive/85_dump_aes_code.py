@@ -11,7 +11,7 @@
   3. 输出入口候选前后的指令字节，供解析「key 指针来自哪个寄存器」。
 
 用法：
-  C:\\Python314\\python.exe 85_dump_aes_code.py --pid 16364 [--base 0x...] [--out <json>]
+  python 85_dump_aes_code.py --pid 16364 [--base 0x...] [--out <json>]
 """
 import argparse
 import ctypes
@@ -20,7 +20,7 @@ import json
 import os
 import sys
 
-BASE_DIR = r"C:\Users\Lenovo\Desktop\WeChatExport"
+BASE_DIR = r"<项目根>"
 kernel32 = ctypes.windll.kernel32
 PQI, PVR = 0x0400, 0x0010
 

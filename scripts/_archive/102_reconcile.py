@@ -5,7 +5,7 @@ import struct
 import sys
 
 KEY = bytes.fromhex("ac52e88c6dc8e2b5913efeb6c9fc6f81cdb9a692039257e8396f6d7479640388")
-DB = r"E:\xwechat_files\wxid_usdvuhs727dr22_2291\db_storage\message\message_0.db"
+DB = r"<db_storage>\message\message_0.db"
 PAGESZ, SALT, MAC_OFF = 4096, 16, 4032
 
 

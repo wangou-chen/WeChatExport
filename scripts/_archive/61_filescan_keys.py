@@ -7,7 +7,7 @@ S5-r —— 在微信数据目录的小文件里按 stride=1 全偏移测试 32 
 
 用法：
   set PYTHONUTF8=1
-  C:\\Python314\\python.exe 61_filescan_keys.py --root <db_storage 或数据目录> --db <db>
+  python 61_filescan_keys.py --root <db_storage 或数据目录> --db <db>
       [--max-size 4194304] [--stride 1]
 """
 import argparse

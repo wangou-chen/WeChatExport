@@ -10,7 +10,7 @@
   * 本脚本补齐 0x5937100..0x5937340，涵盖 AES-256 扩展函数全部。
 
 用法：
-  C:\\Python314\\python.exe 93_dump_aes256_region.py --pid <pid> [--lo 0x5937100] [--hi 0x5937340]
+  python 93_dump_aes256_region.py --pid <pid> [--lo 0x5937100] [--hi 0x5937340]
 """
 import argparse
 import ctypes
@@ -20,7 +20,7 @@ import subprocess
 import sys
 import time
 
-BASE = r"C:\Users\Lenovo\Desktop\WeChatExport"
+BASE = os.environ.get('WXARCHIVE_BASE') or os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 kernel32 = ctypes.windll.kernel32
 PQI, PVR = 0x0400, 0x0010
 

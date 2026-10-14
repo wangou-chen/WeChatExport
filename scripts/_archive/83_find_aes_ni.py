@@ -11,7 +11,7 @@
   并输出前若干个候选地址 —— 下一步可在这些地址上挂 Interceptor 抓 xmm 寄存器。
 
 用法：
-  C:\\Python314\\python.exe 83_find_aes_ni.py --pid 16364 [--out <json>] [--max-hits 40]
+  python 83_find_aes_ni.py --pid 16364 [--out <json>] [--max-hits 40]
 """
 import argparse
 import ctypes
@@ -22,7 +22,7 @@ import subprocess
 import sys
 import time
 
-BASE = r"C:\Users\Lenovo\Desktop\WeChatExport"
+BASE = os.environ.get('WXARCHIVE_BASE') or os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 kernel32 = ctypes.windll.kernel32
 PQI, PVR = 0x0400, 0x0010
 MEM_COMMIT = 0x1000

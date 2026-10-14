@@ -14,8 +14,8 @@
 
 用法：
   set PYTHONUTF8=1
-  set PYTHONPATH=C:\\Users\\Lenovo\\Desktop\\WeChatExport\\lib\\frida_pkg
-  C:\\Python314\\python.exe -u 81_readpath_key.py --db <db> [--seconds 240] [--out <json>]
+  set PYTHONPATH=<项目根>\\lib\\frida_pkg
+  python -u 81_readpath_key.py --db <db> [--seconds 240] [--out <json>]
 
 跑起来后在微信里点开几个旧会话、上翻历史。
 """
@@ -30,7 +30,7 @@ import time
 
 import frida
 
-BASE = r"C:\Users\Lenovo\Desktop\WeChatExport"
+BASE = os.environ.get('WXARCHIVE_BASE') or os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PAGESZ, SALT, MAC_OFF = 4096, 16, 4032
 
 JS = r"""

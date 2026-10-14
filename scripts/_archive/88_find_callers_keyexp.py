@@ -13,8 +13,8 @@
 
 用法：
   set PYTHONUTF8=1
-  set PYTHONPATH=C:\\Users\\Lenovo\\Desktop\\WeChatExport\\lib\\frida_pkg
-  C:\\Python314\\python.exe -u 88_find_callers_keyexp.py --pid N --db <db> [--seconds 120]
+  set PYTHONPATH=<项目根>\\lib\\frida_pkg
+  python -u 88_find_callers_keyexp.py --pid N --db <db> [--seconds 120]
 """
 import argparse
 import ctypes
@@ -30,7 +30,7 @@ import time
 
 import frida
 
-BASE = r"C:\Users\Lenovo\Desktop\WeChatExport"
+BASE = os.environ.get('WXARCHIVE_BASE') or os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PAGESZ, SALT, MAC_OFF = 4096, 16, 4032
 KEYEXP_RVA = 0x5936EDA
 kernel32 = ctypes.windll.kernel32

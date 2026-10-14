@@ -14,7 +14,7 @@ S5-g —— page-1 HMAC 预言机扫描（Python + OpenSSL，多进程分片）
 
 单分片用法：
   set PYTHONUTF8=1
-  C:\\Python314\\python.exe 95_memscan_mp.py --pid 16056 --db <db> --part 0/16 --stride 8
+  python 95_memscan_mp.py --pid 16056 --db <db> --part 0/16 --stride 8
 整体用法见 97_scan_all.ps1
 """
 import argparse

@@ -5,7 +5,7 @@
 看清 x'...' 内部到底是 96 位 hex（64 key + 32 salt）还是别的长度/顺序。
 
 用法：
-  C:\\Python314\\python.exe 107_dump_key_context.py --db <db> [--window 128]
+  python 107_dump_key_context.py --db <db> [--window 128]
 """
 import argparse
 import ctypes

@@ -1,9 +1,33 @@
-"""批量解密：定位数据目录 → 收集库与页面 → 扫密钥 → 解密 + WAL 回填。"""
+"""批量解密：定位数据目录 → 收集库与页面 → 扫密钥 → 解密 + WAL 回填。
+
+路径解析优先级（均可移植，无需改代码）：
+    命令行 --db-dir  >  环境变量 WXARCHIVE_DB_DIR  >  自动探测（%APPDATA% 配置 / 我的文档）
+"""
 import json
 import os
 from typing import Dict, List, Optional, Tuple
 
 from . import crypto, keys
+
+ENV_DB_DIR = "WXARCHIVE_DB_DIR"
+
+
+def resolve_db_dir(explicit: Optional[str] = None, strict: bool = True) -> Optional[str]:
+    """按优先级解析数据目录：显式参数 → 环境变量 → 自动探测。
+
+    规则：
+      * 显式参数（命令行）若给出但无效 → 返回 None（由调用方报错），**不回退**，
+        避免「参数写错却静默用了别的目录」这种危险行为。
+      * 环境变量同理（strict=True 时）。
+      * 两者都没给 → 自动探测。
+    """
+    for label, cand in (("--db-dir", explicit), ("WXARCHIVE_DB_DIR", os.environ.get(ENV_DB_DIR))):
+        if cand:
+            if os.path.isdir(cand):
+                return os.path.abspath(cand)
+            if strict:
+                return None            # 显式指定但无效：不回退
+    return detect_db_dir()
 
 
 def detect_db_dir() -> Optional[str]:

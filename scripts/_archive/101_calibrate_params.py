@@ -14,7 +14,7 @@
   IV 位置:      page[reserved-16 : reserved]（SQLCipher 4）或 page[0:16]（SQLCipher 3）
 
 用法：
-  C:\\Python314\\python.exe 101_calibrate_params.py --db <db> --key <64hex>
+  python 101_calibrate_params.py --db <db> --key <64hex>
 """
 import argparse
 import hashlib

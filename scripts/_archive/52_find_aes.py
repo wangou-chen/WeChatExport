@@ -13,7 +13,7 @@
 只读，不写目标进程。
 
 用法：
-  C:\\Python314\\python.exe 52_find_aes.py --pid 12516
+  python 52_find_aes.py --pid 12516
 """
 import argparse
 import ctypes
@@ -23,7 +23,7 @@ import os
 import struct
 import sys
 
-BASE = r"C:\Users\Lenovo\Desktop\WeChatExport"
+BASE = os.environ.get('WXARCHIVE_BASE') or os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 kernel32 = ctypes.windll.kernel32
 PQI, PVR = 0x0400, 0x0010
 MEM_COMMIT = 0x1000

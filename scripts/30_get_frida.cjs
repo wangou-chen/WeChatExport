@@ -5,8 +5,8 @@ const path = require('path');
 const zlib = require('zlib');
 
 const MIRROR = 'https://pypi.tuna.tsinghua.edu.cn/simple/frida/';
-const DL = 'C:\\Users\\Lenovo\\Desktop\\WeChatExport\\download';
-const LIB = 'C:\\Users\\Lenovo\\Desktop\\WeChatExport\\lib\\frida_pkg';
+const DL = path.join(__dirname, '..', 'download');
+const LIB = path.join(__dirname, '..', 'lib', 'frida_pkg');
 
 async function main() {
   const r = await fetch(MIRROR, { headers: { 'User-Agent': 'dsh' } });

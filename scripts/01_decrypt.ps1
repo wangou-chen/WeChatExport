@@ -1,9 +1,9 @@
 # S6：解密全部数据库（对快照操作，不触碰 E:\ 源库）
 # 用法：
-#   powershell -NoProfile -ExecutionPolicy Bypass -File C:\Users\Lenovo\Desktop\WeChatExport\scripts\01_decrypt.ps1
+#   powershell -NoProfile -ExecutionPolicy Bypass -File <项目根>\scripts\01_decrypt.ps1
 
 $ErrorActionPreference = 'Stop'
-$base = 'C:\Users\Lenovo\Desktop\WeChatExport'
+$base = '<项目根>'
 $env:PYTHONPATH = Join-Path $base 'lib'
 $env:PYTHONUTF8 = '1'
 $env:PYTHONIOENCODING = 'utf-8'
@@ -14,7 +14,7 @@ if (-not (Test-Path $keys)) {
     exit 1
 }
 
-$py = 'C:\Python314\python.exe'
+$py = 'python'
 $tool = Join-Path $base 'tool\wechat-decrypt-main\decrypt_db.py'
 
 Write-Host "=== S6 全量解密主库 ===" -ForegroundColor Cyan

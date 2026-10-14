@@ -10,8 +10,8 @@
 
 用法：
   set PYTHONUTF8=1
-  set PYTHONPATH=C:\\Users\\Lenovo\\Desktop\\WeChatExport\\lib\\frida_pkg
-  C:\\Python314\\python.exe -u 82_ringbuffer_reads.py --db <db> [--seconds 120] [--out <json>]
+  set PYTHONPATH=<项目根>\\lib\\frida_pkg
+  python -u 82_ringbuffer_reads.py --db <db> [--seconds 120] [--out <json>]
 """
 import argparse
 import ctypes
@@ -26,7 +26,7 @@ import time
 
 import frida
 
-BASE = r"C:\Users\Lenovo\Desktop\WeChatExport"
+BASE = os.environ.get('WXARCHIVE_BASE') or os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PAGESZ, SALT, MAC_OFF = 4096, 16, 4032
 kernel32 = ctypes.windll.kernel32
 PQI, PVR = 0x0400, 0x0010

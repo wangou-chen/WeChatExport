@@ -10,8 +10,8 @@
 
 用法：
   set PYTHONUTF8=1
-  set PYTHONPATH=C:\\Users\\Lenovo\\Desktop\\WeChatExport\\lib\\frida_pkg
-  C:\\Python314\\python.exe -u 75_suspended_multihook.py --db <db> [--lo 0x3486100] [--hi 0x3486180] [--step 16]
+  set PYTHONPATH=<项目根>\\lib\\frida_pkg
+  python -u 75_suspended_multihook.py --db <db> [--lo 0x3486100] [--hi 0x3486180] [--step 16]
 """
 import argparse
 import ctypes
@@ -25,7 +25,7 @@ import time
 
 import frida
 
-BASE = r"C:\Users\Lenovo\Desktop\WeChatExport"
+BASE = os.environ.get('WXARCHIVE_BASE') or os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 EXE = r"D:\Program Files (x86)\Tencent\Weixin\Weixin.exe"
 CMDLINE = '"%s" --scene=taskbarpins' % EXE
 kernel32 = ctypes.windll.kernel32

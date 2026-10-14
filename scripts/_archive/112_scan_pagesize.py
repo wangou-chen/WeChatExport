@@ -6,8 +6,8 @@
 判据仍旧是 page1 明文 [16:18] == 该页大小（BE）。
 
 用法：
-  set PYTHONPATH=C:\\Users\\Lenovo\\Desktop\\WeChatExport\\lib
-  C:\\Python314\\python.exe 112_scan_pagesize.py --db <db> --key <64hex>
+  set PYTHONPATH=<项目根>\\lib
+  python 112_scan_pagesize.py --db <db> --key <64hex>
 """
 import argparse
 import hashlib

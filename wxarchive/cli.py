@@ -20,21 +20,32 @@ DEFAULT_WORK = os.path.join(os.getcwd(), "decrypted")
 
 
 def _paths(args):
-    db_dir = args.db_dir or dec.detect_db_dir()
-    if not db_dir or not os.path.isdir(db_dir):
-        print("[错误] 未找到微信数据目录，请用 --db-dir 指定", file=sys.stderr)
+    explicit = getattr(args, "db_dir", None)
+    db_dir = dec.resolve_db_dir(explicit)
+    if not db_dir:
+        if explicit:
+            print("[错误] --db-dir 指定的目录不存在: %s" % explicit, file=sys.stderr)
+        else:
+            print("[错误] 未找到微信数据目录。请任选其一：\n"
+                  "       1) --db-dir \"<db_storage 路径>\"\n"
+                  "       2) 设置环境变量 WXARCHIVE_DB_DIR\n"
+                  "       3) 确保微信已登录过（可自动从 %APPDATA%\\Tencent\\xwechat\\config 探测）",
+                  file=sys.stderr)
         sys.exit(2)
-    work = args.work or DEFAULT_WORK
-    out = args.out or DEFAULT_OUT
-    keys_json = args.keys_file or os.path.join(out, "all_keys.json")
+    # 输出目录：命令行 > 环境变量 > 当前工作目录下的默认名
+    work = args.work or os.environ.get("WXARCHIVE_WORK") or DEFAULT_WORK
+    out = args.out or os.environ.get("WXARCHIVE_OUT") or DEFAULT_OUT
+    keys_json = (args.keys_file or os.environ.get("WXARCHIVE_KEYS")
+                 or os.path.join(out, "all_keys.json"))
     return db_dir, work, out, keys_json
 
 
 def cmd_info(args):
-    dbs = dec.detect_db_dir()
+    dbs = dec.resolve_db_dir(getattr(args, "db_dir", None))
     procs = keys.find_processes()
     print("wxarchive %s" % __version__)
-    print("自动探测数据目录: %s" % (dbs or "(未找到)"))
+    print("数据目录: %s" % (dbs or "(未找到 — 请用 --db-dir 或环境变量 WXARCHIVE_DB_DIR)"))
+    print("解析优先级: --db-dir > $env:WXARCHIVE_DB_DIR > 自动探测")
     print("微信进程: %s" % (procs or "(未运行)"))
     if dbs:
         index = dec.collect_databases(dbs)

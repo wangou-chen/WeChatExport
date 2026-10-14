@@ -11,7 +11,7 @@
   密文起点:     16（page1 去盐） / 0
   密文终点:     4032 / 4016 / 4080 / 4096
 用法：
-  C:\\Python314\\python.exe 105_page_layout.py --db <db> --key <64hex>
+  python 105_page_layout.py --db <db> --key <64hex>
 """
 import argparse
 import hashlib

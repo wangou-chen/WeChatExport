@@ -16,7 +16,7 @@ import sqlite3
 
 from Crypto.Cipher import AES
 
-BASE = r"C:\Users\Lenovo\Desktop\WeChatExport"
+BASE = r"<项目根>"
 DB_DIR = os.path.join(BASE, "snapshot", "db_storage")
 DEC_DIR = os.path.join(BASE, "decrypted")
 KEYS_FILE = os.path.join(BASE, "keys", "all_keys.json")

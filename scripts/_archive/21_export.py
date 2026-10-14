@@ -6,7 +6,7 @@ S5-i —— 微信 4.x 聊天记录导出（读已解密 DB，输出 JSON + 单�
 
 用法：
   set PYTHONUTF8=1
-  C:\\Python314\\python.exe 21_export.py [--db-dir <dir>] [--out <dir>] [--limit N] [--schema]
+  python 21_export.py [--db-dir <dir>] [--out <dir>] [--limit N] [--schema]
 """
 import argparse
 import glob
@@ -17,7 +17,7 @@ import sqlite3
 import sys
 import time
 
-BASE = r"C:\Users\Lenovo\Desktop\WeChatExport"
+BASE = os.environ.get('WXARCHIVE_BASE') or os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DEC_DIR = os.path.join(BASE, "decrypted", "db_storage")
 OUT_DIR = os.path.join(BASE, "out")
 

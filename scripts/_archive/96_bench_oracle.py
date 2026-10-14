@@ -2,7 +2,7 @@
 
 用法：
   set PYTHONUTF8=1
-  C:\\Python314\\python.exe 96_bench_oracle.py [--threads 1,4,20] [--n 200000]
+  python 96_bench_oracle.py [--threads 1,4,20] [--n 200000]
 """
 import argparse
 import hashlib
@@ -13,7 +13,7 @@ import threading
 import time
 
 PAGESZ, SALT, MAC_OFF = 4096, 16, 4032
-DB = r"C:\Users\Lenovo\Desktop\WeChatExport\snapshot\db_storage\message\message_0.db"
+DB = r"<项目根>\snapshot\db_storage\message\message_0.db"
 
 
 def load():

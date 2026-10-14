@@ -7,7 +7,7 @@
 本脚本只在指定根目录下递归扫描**文件头**与**前 4KB 内是否有明文页头**，不做解密、不写文件。
 
 用法：
-  C:\\Python314\\python.exe 98_find_plain_sqlite.py [--roots <a;b;c>] [--max-size 50MB] [--deep]
+  python 98_find_plain_sqlite.py [--roots <a;b;c>] [--max-size 50MB] [--deep]
 """
 import argparse
 import os
@@ -45,10 +45,11 @@ def scan_file(p, max_size, deep):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--roots", default=(
-        r"E:\xwechat_files;"
-        r"C:\Users\Lenovo\AppData\Roaming\Tencent\xwechat;"
-        r"C:\Users\Lenovo\AppData\Local\Tencent"))
+    ap.add_argument("--roots", default=";".join([
+        r"<数据盘>\xwechat_files",
+        os.path.expandvars(r"%APPDATA%\Tencent\xwechat"),
+        os.path.expandvars(r"%LOCALAPPDATA%\Tencent"),
+    ]))
     ap.add_argument("--max-size", type=int, default=50 * 1024 * 1024)
     ap.add_argument("--deep", action="store_true", help="在文件内部也找页头")
     ap.add_argument("--skip-db", action="store_true", help="跳过已加密的 *.db（本就知道它们是密文）")

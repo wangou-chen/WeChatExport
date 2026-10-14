@@ -15,7 +15,7 @@ S5-l —— 通过 IAT 在宿主侧（无需 Frida）hook bcrypt 对称密钥生
 
 用法：
   set PYTHONUTF8=1
-  C:\\Python314\\python.exe 42_iat_scan.py --pid 16056 [--apply]
+  python 42_iat_scan.py --pid 16056 [--apply]
 """
 import argparse
 import ctypes
@@ -31,7 +31,7 @@ PQI, PVR, PWO = 0x0400, 0x0010, 0x0020
 MEM_COMMIT = 0x1000
 PAGE_GUARD = 0x100
 PAGE_NOACCESS = 0x01
-BASE = r"C:\Users\Lenovo\Desktop\WeChatExport"
+BASE = os.environ.get('WXARCHIVE_BASE') or os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 class MBI(ctypes.Structure):

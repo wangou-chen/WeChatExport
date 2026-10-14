@@ -8,8 +8,8 @@ x'<64hex_key><32hex_salt>' 模式匹配、all_keys.json 输出）全部沿用原
 
 用法：
   set PYTHONUTF8=1
-  set PYTHONPATH=C:\\Users\\Lenovo\\Desktop\\WeChatExport\\lib
-  C:\\Python314\\python.exe C:\\Users\\Lenovo\\Desktop\\WeChatExport\\scripts\\01_extract_keys.py [--pid N]
+  set PYTHONPATH=<项目根>\\lib
+  python <项目根>\\scripts\\01_extract_keys.py [--pid N]
 """
 import ctypes
 import importlib.util
@@ -17,7 +17,7 @@ import os
 import subprocess
 import sys
 
-BASE = r"C:\Users\Lenovo\Desktop\WeChatExport"
+BASE = os.environ.get('WXARCHIVE_BASE') or os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TOOL = os.path.join(BASE, "tool", "wechat-decrypt-main")
 
 

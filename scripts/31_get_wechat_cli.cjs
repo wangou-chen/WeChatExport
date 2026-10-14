@@ -5,8 +5,8 @@ const path = require('path');
 const zlib = require('zlib');
 
 const MIRROR = 'https://pypi.tuna.tsinghua.edu.cn/simple/wechat-cli/';
-const DL = 'C:\\Users\\Lenovo\\Desktop\\WeChatExport\\download';
-const LIB = 'C:\\Users\\Lenovo\\Desktop\\WeChatExport\\lib\\wechat_cli_pkg';
+const DL = path.join(__dirname, '..', 'download');
+const LIB = path.join(__dirname, '..', 'lib', 'wechat_cli_pkg');
 
 function findEOCD(buf) {
   for (let i = buf.length - 22; i >= 0 && i > buf.length - 70000; i--) {

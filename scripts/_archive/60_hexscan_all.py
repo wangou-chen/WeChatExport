@@ -12,7 +12,7 @@ S5-q —— 按 wechat-extract 仓库的「踩坑」复测密钥格式与作用�
 
 用法：
   set PYTHONUTF8=1
-  C:\\Python314\\python.exe 60_hexscan_all.py --db <db> [--part i/K] [--window 65536]
+  python 60_hexscan_all.py --db <db> [--part i/K] [--window 65536]
 """
 import argparse
 import ctypes
@@ -26,7 +26,7 @@ import subprocess
 import sys
 import time
 
-BASE = r"C:\Users\Lenovo\Desktop\WeChatExport"
+BASE = os.environ.get('WXARCHIVE_BASE') or os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 kernel32 = ctypes.windll.kernel32
 MEM_COMMIT = 0x1000
 PAGE_GUARD = 0x100

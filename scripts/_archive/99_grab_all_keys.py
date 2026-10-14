@@ -14,7 +14,7 @@
 
 用法：
   set PYTHONUTF8=1
-  C:\\Python314\\python.exe 99_grab_all_keys.py --db-dir <db_storage> [--out keys\\all_keys_full.json]
+  python 99_grab_all_keys.py --db-dir <db_storage> [--out keys\\all_keys_full.json]
 """
 import argparse
 import ctypes
@@ -29,7 +29,7 @@ import subprocess
 import sys
 import time
 
-BASE = r"C:\Users\Lenovo\Desktop\WeChatExport"
+BASE = os.environ.get('WXARCHIVE_BASE') or os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 kernel32 = ctypes.windll.kernel32
 MEM_COMMIT = 0x1000
 PAGE_GUARD = 0x100

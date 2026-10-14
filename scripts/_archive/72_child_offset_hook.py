@@ -16,8 +16,8 @@
 
 用法：
   set PYTHONUTF8=1
-  set PYTHONPATH=C:\\Users\\Lenovo\\Desktop\\WeChatExport\\lib\\frida_pkg
-  C:\\Python314\\python.exe -u 72_child_offset_hook.py --db <db> --offset 0x3486140 [--seconds 90]
+  set PYTHONPATH=<项目根>\\lib\\frida_pkg
+  python -u 72_child_offset_hook.py --db <db> --offset 0x3486140 [--seconds 90]
 """
 import argparse
 import ctypes
@@ -31,7 +31,7 @@ import time
 
 import frida
 
-BASE = r"C:\Users\Lenovo\Desktop\WeChatExport"
+BASE = os.environ.get('WXARCHIVE_BASE') or os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DEFAULT_EXE = r"D:\Program Files (x86)\Tencent\Weixin\Weixin.exe"
 kernel32 = ctypes.windll.kernel32
 CREATE_SUSPENDED = 0x00000004

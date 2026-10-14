@@ -7,7 +7,7 @@ page-1 HMAC 已在 (PBKDF2-SHA512, iter=2, salt^0x3A, HMAC-SHA512, reserved=80) 
   enc 派生盐:   salt / salt^0x3A
   IV:           page[4016:4032]（reserved 尾部）或 page[16:32]（密文头部）或 page[4000:4016]
 用法：
-  C:\\Python314\\python.exe 103_calibrate_v2.py --db <db> --key <64hex>
+  python 103_calibrate_v2.py --db <db> --key <64hex>
 """
 import argparse
 import hashlib

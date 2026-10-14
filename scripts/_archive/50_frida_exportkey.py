@@ -6,8 +6,8 @@
 
 用法：
   set PYTHONUTF8=1
-  set PYTHONPATH=C:\\Users\\Lenovo\\Desktop\\WeChatExport\\lib\\frida_pkg
-  C:\\Python314\\python.exe -u 50_frida_exportkey.py --pid <pid> --seconds 120
+  set PYTHONPATH=<项目根>\\lib\\frida_pkg
+  python -u 50_frida_exportkey.py --pid <pid> --seconds 120
 """
 import argparse
 import ctypes
@@ -18,7 +18,7 @@ import time
 
 import frida
 
-BASE = r"C:\Users\Lenovo\Desktop\WeChatExport"
+BASE = os.environ.get('WXARCHIVE_BASE') or os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LOG = os.path.join(BASE, "logs")
 kernel32 = ctypes.windll.kernel32
 

@@ -16,7 +16,7 @@
 
 用法：
   set PYTHONUTF8=1
-  C:\\Python314\\python.exe -u 76_launch_and_scan.py --db-dir <db_storage> [--parts 6] [--rounds 2]
+  python -u 76_launch_and_scan.py --db-dir <db_storage> [--parts 6] [--rounds 2]
 """
 import argparse
 import ctypes
@@ -29,7 +29,7 @@ import subprocess
 import sys
 import time
 
-BASE = r"C:\Users\Lenovo\Desktop\WeChatExport"
+BASE = os.environ.get('WXARCHIVE_BASE') or os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 EXE = r"D:\Program Files (x86)\Tencent\Weixin\Weixin.exe"
 CMDLINE = '"%s" --scene=taskbarpins' % EXE
 kernel32 = ctypes.windll.kernel32

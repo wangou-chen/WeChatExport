@@ -9,8 +9,8 @@
 
 用法：
   set PYTHONUTF8=1
-  set PYTHONPATH=C:\\Users\\Lenovo\\Desktop\\WeChatExport\\lib\\frida_pkg
-  C:\\Python314\\python.exe 41_frida_aeskeys.py --pid 16056 [--seconds 180]
+  set PYTHONPATH=<项目根>\\lib\\frida_pkg
+  python 41_frida_aeskeys.py --pid 16056 [--seconds 180]
 """
 import argparse
 import json
@@ -20,7 +20,7 @@ import time
 
 import frida
 
-BASE = r"C:\Users\Lenovo\Desktop\WeChatExport"
+BASE = os.environ.get('WXARCHIVE_BASE') or os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LOG = os.path.join(BASE, "logs")
 
 JS = r"""

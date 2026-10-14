@@ -15,8 +15,8 @@
 
 用法：
   set PYTHONUTF8=1
-  set PYTHONPATH=C:\\Users\\Lenovo\\Desktop\\WeChatExport\\lib\\frida_pkg
-  C:\\Python314\\python.exe -u 87_hook_keyexp_v2.py --pid N --db <db> [--seconds 90]
+  set PYTHONPATH=<项目根>\\lib\\frida_pkg
+  python -u 87_hook_keyexp_v2.py --pid N --db <db> [--seconds 90]
 """
 import argparse
 import hashlib
@@ -29,7 +29,7 @@ import time
 
 import frida
 
-BASE = r"C:\Users\Lenovo\Desktop\WeChatExport"
+BASE = os.environ.get('WXARCHIVE_BASE') or os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PAGESZ, SALT, MAC_OFF = 4096, 16, 4032
 CAND_RVAS = ["0x5936EE2", "0x5936EEB", "0x5936F4E", "0x5936EE5"]
 
