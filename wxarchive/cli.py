@@ -41,11 +41,27 @@ def _paths(args):
 
 
 def cmd_info(args):
-    dbs = dec.resolve_db_dir(getattr(args, "db_dir", None))
+    explicit = getattr(args, "db_dir", None)
+    dbs = dec.resolve_db_dir(explicit)
+    cfg = dec.load_project_config()
     procs = keys.find_processes()
     print("wxarchive %s" % __version__)
-    print("数据目录: %s" % (dbs or "(未找到 — 请用 --db-dir 或环境变量 WXARCHIVE_DB_DIR)"))
-    print("解析优先级: --db-dir > $env:WXARCHIVE_DB_DIR > 自动探测")
+    print("项目根目录: %s" % dec.project_root())
+    if cfg:
+        print("项目配置: %s（db_dir=%s）" % (cfg.get("_path"), cfg.get("db_dir")))
+    else:
+        print("项目配置: 无（可用 %s 锁定数据目录，见 README §3）" % dec.CONFIG_NAME)
+    print("数据目录: %s" % (dbs or "(未找到)"))
+    if explicit:
+        print("  ← 来源: --db-dir（显式指定）")
+    elif cfg.get("db_dir"):
+        print("  ← 来源: 项目配置文件")
+    elif os.environ.get(dec.ENV_DB_DIR):
+        print("  ← 来源: 环境变量 %s" % dec.ENV_DB_DIR)
+    else:
+        print("  ← 来源: 自动探测（探测源＝微信自身配置，故与本工具所在目录无关）")
+        for label, path in dec.detection_sources():
+            print("       %-28s %s" % (label, path))
     print("微信进程: %s" % (procs or "(未运行)"))
     if dbs:
         index = dec.collect_databases(dbs)

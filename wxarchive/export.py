@@ -28,7 +28,9 @@ MSG_TYPES = {
 
 
 def _zstd_decompress(data: bytes) -> str:
+    from ._bootstrap import ensure_dep
     for mod in ("zstandard", "zstd"):
+        ensure_dep(mod)
         try:
             m = __import__(mod)
             if mod == "zstandard":

@@ -4,7 +4,12 @@
 全部自足实现，不依赖任何第三方逆向工具运行时（唯一依赖 `pycryptodome` 与 `zstandard`）。
 
 **实测环境**：Windows · 微信 **4.0.3.39 / 4.1.0.30** · Python 3.14
-**实测成果**：解密 22 个数据库（946 MB）→ 导出 **677 会话 / 7,305 联系人 / 461,374 条消息**
+**实测成果**：解密 **22 个库 / 946 MB** → 导出 **677 会话 / 7,305 联系人 / 46.1 万条消息**
+
+```powershell
+# 零配置启动（无需设置 PYTHONPATH）
+cd <项目根> ; python -m wxarchive all
+```
 
 ---
 
@@ -32,37 +37,77 @@ pip install pycryptodome zstandard
 
 ## 3. 快速开始
 
-> **可移植**：本工具不含任何机器特定的硬编码路径（已全量审计）。
-> 整目录拷贝到任意位置即可运行；数据目录自动探测，也可用 `--db-dir` 或环境变量指定。
+> **可移植 + 零配置**：本工具不含任何机器特定的硬编码路径（已全量审计）；
+> 依赖缺失时会**自动回退到项目自带的 `lib/`**，因此无需手动设置 `PYTHONPATH`。
 
 ```powershell
-$env:PYTHONUTF8="1"
-$env:PYTHONPATH="<项目根>"          # 本目录（clone 后的路径）
+cd <项目根>
 
 # 一键：取密钥 → 解密全部库 → 导出全部聊天记录
 python -m wxarchive all
 ```
 
-或使用一键脚本（内含依赖检查、版本提示、Python 自动定位；根目录自动取脚本所在目录）：
+**依赖**（二选一，任一即可）：
+
+```powershell
+# 方式 1：装到系统 Python（推荐，一劳永逸）
+pip install pycryptodome zstandard
+
+# 方式 2：什么都不装 —— 工具会自动使用项目自带 lib/ 内的副本
+#         （lib/ 为 gitignore 排除项；若从 git clone，请用方式 1）
+```
+
+或使用一键脚本（自动定位 Python、检查依赖、提示版本；根目录自动取脚本所在目录）：
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\oneclick.ps1
 ```
 
+### 常见启动报错
+
+| 报错 | 原因 | 解决 |
+|---|---|---|
+| `ModuleNotFoundError: No module named 'Crypto'` | 系统未装 pycryptodome，且项目 `lib/` 被删（如 git clone 后） | `pip install pycryptodome` |
+| `ModuleNotFoundError: No module named 'zstandard'` | 同上（zstd 解压消息需要） | `pip install zstandard` |
+| `[错误] 未找到微信数据目录` | 微信未登录过 / 数据在非默认位置 | 用 `--db-dir`、`wxarchive.config.json` 或 `$env:WXARCHIVE_DB_DIR` |
+
 ### 路径解析优先级
 
 | 项 | 优先级 |
 |---|---|
-| 数据目录 `db_storage` | `--db-dir` > 环境变量 `WXARCHIVE_DB_DIR` > 自动探测（`%APPDATA%\Tencent\xwechat\config\*.ini` 指定的盘符 → `~\Documents\xwechat_files\*\db_storage`） |
+| 数据目录 `db_storage` | `--db-dir` > 项目配置 `wxarchive.config.json` > 环境变量 `WXARCHIVE_DB_DIR` > **自动探测** |
 | 解密输出目录 | `--work` > 环境变量 `WXARCHIVE_WORK` > `<当前目录>\decrypted` |
 | 导出目录 | `--out` > 环境变量 `WXARCHIVE_OUT` > `<当前目录>\out` |
 | 密钥缓存 | `--keys-file` > 环境变量 `WXARCHIVE_KEYS` > `<导出目录>\all_keys.json` |
 
+> **关于「换了文件夹还是找到原来的库」**：自动探测的**探测源是微信自身的配置**
+> `%APPDATA%\Tencent\xwechat\config\*.ini`（内容是数据盘符，如 `E:\`），
+> 所以工具放在任何文件夹都会指向同一台机器上的同一份微信数据 —— **这是设计行为，不是硬编码**。
+> 用 `python -m wxarchive info` 可看**当前数据目录及其来源**；要锁定到别处，用下面任一方式。
+
+**方式 A：项目配置文件（推荐，随目录走）**
+
 ```powershell
-# 例：用环境变量代替命令行参数（适合放进启动脚本）
+# 复制模板并填写
+Copy-Item .\wxarchive.config.example.json .\wxarchive.config.json
+# 编辑其 db_dir / work / out 字段（留空则继续向下回退）
+```
+
+**方式 B：环境变量**
+
+```powershell
 $env:WXARCHIVE_DB_DIR = "D:\xwechat_files\your_wxid\db_storage"
 python -m wxarchive all
 ```
+
+**方式 C：命令行参数**
+
+```powershell
+python -m wxarchive all --db-dir "D:\xwechat_files\your_wxid\db_storage"
+```
+
+**安全行为**：以上三种「显式来源」若路径无效，程序会**直接报错退出**，绝不静默回退到别的目录。
+密钥缓存也做了校验——若缓存的 salt 与当前库不符（说明是别的数据目录的缓存），会自动作废并重新扫描。
 
 **产物**
 
@@ -171,8 +216,10 @@ WeChatExport/
 │   ├── decrypt.py             数据目录探测 + 批量解密
 │   ├── sessions.py            会话/联系人/Name2Id 映射
 │   ├── export.py              导出 JSON / Markdown / INDEX
+│   ├── _bootstrap.py          依赖自举：缺失时回退到项目 lib/
 │   └── README.md              库文档
-├── oneclick.ps1               一键脚本
+├── wxarchive.config.example.json   项目配置模板（锁定数据目录/输出目录）
+├── oneclick.ps1               一键脚本（根目录自动取脚本位置）
 ├── block_weixin_update_v2.ps1 禁止微信自动更新（管理员，可回滚）
 ├── scripts/                   可用链路（15 个脚本，见 §10）
 │   └── _archive/              调查过程归档（60 个，含负面结论索引 README）

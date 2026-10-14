@@ -1,0 +1,6 @@
+{
+    "_comment": "wxarchive 项目配置（可选）。复制本文件为 wxarchive.config.json 并按需修改。存在时优先级高于环境变量与自动探测，用于把本工具锁定到指定的微信群数据目录。",
+    "db_dir": "",
+    "work": "",
+    "out": ""
+}

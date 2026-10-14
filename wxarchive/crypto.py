@@ -11,7 +11,11 @@ import hmac as hmac_mod
 import os
 import struct
 
-from Crypto.Cipher import AES
+from ._bootstrap import ensure_dep
+
+ensure_dep("Crypto", "pycryptodome")
+
+from Crypto.Cipher import AES                                   # noqa: E402
 
 PAGE_SIZE = 4096
 KEY_SIZE = 32

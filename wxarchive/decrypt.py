@@ -1,33 +1,90 @@
 """批量解密：定位数据目录 → 收集库与页面 → 扫密钥 → 解密 + WAL 回填。
 
-路径解析优先级（均可移植，无需改代码）：
-    命令行 --db-dir  >  环境变量 WXARCHIVE_DB_DIR  >  自动探测（%APPDATA% 配置 / 我的文档）
+数据目录解析优先级（从高到低，**均无需改代码**）：
+    1. 命令行 --db-dir
+    2. 本项目配置文件 <项目根>/wxarchive.config.json 的 db_dir
+    3. 环境变量 WXARCHIVE_DB_DIR
+    4. 自动探测：%APPDATA%/Tencent/xwechat/config/*.ini 指向的盘符 → ~/Documents/xwechat_files
+       （注意：探测源是**微信自身的配置**，因此无论本工具放在哪个文件夹，
+         都会指向同一台机器上的微信数据目录 —— 这是设计行为，不是硬编码）
+显式指定的路径若无效 → 直接报错，不回退。
 """
 import json
 import os
+import sys
 from typing import Dict, List, Optional, Tuple
 
 from . import crypto, keys
 
 ENV_DB_DIR = "WXARCHIVE_DB_DIR"
+ENV_BASE = "WXARCHIVE_BASE"
+CONFIG_NAME = "wxarchive.config.json"
+
+
+def project_root() -> str:
+    """项目根目录：环境变量 > 包所在目录的上级。"""
+    env = os.environ.get(ENV_BASE)
+    if env and os.path.isdir(env):
+        return os.path.abspath(env)
+    return os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+
+def load_project_config() -> dict:
+    """读取 <项目根>/wxarchive.config.json（可选项，用于把工具锁定到指定数据目录）。
+
+    用 utf-8-sig 读取，兼容 PowerShell 写文件时附加的 BOM。
+    """
+    for base in (os.getcwd(), project_root()):
+        p = os.path.join(base, CONFIG_NAME)
+        if os.path.isfile(p):
+            try:
+                with open(p, encoding="utf-8-sig") as f:
+                    cfg = json.load(f)
+                cfg["_path"] = p
+                return cfg
+            except Exception as e:                                 # noqa: BLE001
+                print("[警告] 项目配置解析失败 %s: %s" % (p, e), file=sys.stderr)
+    return {}
 
 
 def resolve_db_dir(explicit: Optional[str] = None, strict: bool = True) -> Optional[str]:
-    """按优先级解析数据目录：显式参数 → 环境变量 → 自动探测。
-
-    规则：
-      * 显式参数（命令行）若给出但无效 → 返回 None（由调用方报错），**不回退**，
-        避免「参数写错却静默用了别的目录」这种危险行为。
-      * 环境变量同理（strict=True 时）。
-      * 两者都没给 → 自动探测。
-    """
-    for label, cand in (("--db-dir", explicit), ("WXARCHIVE_DB_DIR", os.environ.get(ENV_DB_DIR))):
+    """解析数据目录。显式来源（命令行/项目配置/环境变量）无效时返回 None，不回退。"""
+    cfg = load_project_config()
+    sources = (
+        ("--db-dir", explicit),
+        (CONFIG_NAME + " 的 db_dir", cfg.get("db_dir")),
+        (ENV_DB_DIR, os.environ.get(ENV_DB_DIR)),
+    )
+    for label, cand in sources:
         if cand:
             if os.path.isdir(cand):
                 return os.path.abspath(cand)
             if strict:
-                return None            # 显式指定但无效：不回退
+                return None            # 显式指定但无效：报错而非回退
     return detect_db_dir()
+
+
+def detection_sources() -> List[Tuple[str, str]]:
+    """列出自动探测的候选来源，便于用户核对（info 命令展示）。"""
+    import glob
+    out: List[Tuple[str, str]] = []
+    cfg_dir = os.path.join(os.environ.get("APPDATA", ""), "Tencent", "xwechat", "config")
+    if os.path.isdir(cfg_dir):
+        for ini in glob.glob(os.path.join(cfg_dir, "*.ini")):
+            try:
+                content = open(ini, encoding="utf-8", errors="replace").read(1024).strip()
+            except OSError:
+                continue
+            if not content or any(c in content for c in "\n\r\x00") or not os.path.isdir(content):
+                continue
+            for m in glob.glob(os.path.join(content, "xwechat_files", "*", "db_storage")):
+                if os.path.isdir(m):
+                    out.append(("微信配置 %s" % os.path.basename(ini), m))
+    for m in glob.glob(os.path.join(os.path.expanduser("~"), "Documents",
+                                    "xwechat_files", "*", "db_storage")):
+        if os.path.isdir(m):
+            out.append(("用户文档目录", m))
+    return out
 
 
 def detect_db_dir() -> Optional[str]:
@@ -97,10 +154,21 @@ def decrypt_all(db_dir: str, out_dir: str, keys_json: Optional[str] = None,
         try:
             with open(keys_json, encoding="utf-8") as f:
                 raw = json.load(f)
-            key_map = {k: (v["enc_key"] if isinstance(v, dict) else v)
-                       for k, v in raw.items()}
+            stale = 0
+            for k, v in raw.items():
+                if k not in index:
+                    continue                      # 本目录没有这个库
+                if isinstance(v, dict) and v.get("salt"):
+                    # 缓存密钥与本目录库的 salt 不一致 → 密钥属于别的数据目录/已重建，作废
+                    if v["salt"] != index[k]["salt"].hex():
+                        stale += 1
+                        continue
+                key_map[k] = v["enc_key"] if isinstance(v, dict) else v
             if verbose:
-                print("从 %s 载入密钥 %d 把" % (keys_json, len(key_map)))
+                msg = "从 %s 载入密钥 %d 把" % (keys_json, len(key_map))
+                if stale:
+                    msg += "（作废 %d 把：salt 与当前库不符，可能是别的数据目录的缓存）" % stale
+                print(msg)
         except Exception as e:                                     # noqa: BLE001
             if verbose:
                 print("密钥文件读取失败，将重新扫描：%s" % e)
@@ -117,10 +185,12 @@ def decrypt_all(db_dir: str, out_dir: str, keys_json: Optional[str] = None,
 
     if keys_json:
         os.makedirs(os.path.dirname(os.path.abspath(keys_json)), exist_ok=True)
+        # 只保存「与当前库 salt 一致」的密钥，避免把别的数据目录的缓存写进来
+        merged = {r: {"enc_key": k, "salt": index[r]["salt"].hex()}
+                  for r, k in key_map.items()
+                  if r in index and index[r]["salt"].hex()}
         with open(keys_json, "w", encoding="utf-8") as f:
-            json.dump({r: {"enc_key": k, "salt": index[r]["salt"].hex()}
-                       for r, k in key_map.items() if r in index},
-                      f, indent=2, ensure_ascii=False)
+            json.dump(merged, f, indent=2, ensure_ascii=False)
 
     ok: List[str] = []
     fail: List[Tuple[str, str]] = []
