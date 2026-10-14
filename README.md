@@ -149,8 +149,8 @@ python -m wxarchive chat --chat "pubg" --limit 500       # 只要最近 500 条
 
 ```powershell
 # 生成某联系人的语体分析报告（句长/标点/语气词/口头禅/连发节奏/话题/活跃时段）
-python scripts\202_style_report.py --chat "翔铭" --pronoun 他 --label 翔铭
-python scripts\202_style_report.py --chat "小狗媳妇" --who "小狗媳妇 ᝰꫛꫀꪝ" --pronoun 她 --label 小狗媳妇
+python scripts\202_style_report.py --chat "朋友" --pronoun 他 --label 朋友
+python scripts\202_style_report.py --chat "宝宝" --who "女朋友" --pronoun 她 --label 宝宝
 ```
 
 产物：`out\analysis\<名称>_表达方式分析.md` + 原始消息留档 `_<名称>_messages.txt`。
@@ -189,16 +189,16 @@ WAL:  帧 = 24B 帧头 + 4096B 页，同一 enc_key 解密后按 pgno 回填
 内容   = message_content 优先（WCDB_CT_message_content == 4 为 zstd），降级 source(XML)
 ```
 
-## 6. 常见坑（都是实测踩过的）
+## 6. 坑
 
-1. **不要对 `enc_key` 做 PBKDF2 派生**。这是最耗时的错误：错误派生会导致所有页解密失败，
-   但 page1 仍会「恰好」解出 `SQLite format 3\0` 前 16 字节（**假阳性**），极难定位。
+1. **不要对 `enc_key` 做 PBKDF2 派生**。错误派生会导致所有页解密失败，
+   但 page1 仍会「恰好」解出 `SQLite format 3\0` 前 16 字节（**假阳性**），这一错误极难定位。
    正确判据是 **page_size 字段 == 4096 且 page2 首字节为 b-tree 类型**（`crypto.check_key()`）。
 2. **每库一钥**，不要用一个密钥试全部库。
 3. **内存中同一 salt 会残留多把历史密钥**，HMAC 校验会把当前密钥一起否掉 → 必须用实际解密判定。
-4. `decrypt_page` 的密文区间：page1 是 `[16:4016]`（**4000 字节**），不是 `[16:4032]`。差一块全错。
+4. `decrypt_page` 的密文区间：page1 是 `[16:4016]`（**4000 字节**），不是 `[16:4032]`。
 5. **同一会话分散在 4 个分片库**，必须合并去重。
-6. **不要在已运行的微信上挂调试器或改写热路径指令** —— 实测三次导致微信崩溃（该版本有反调试）。
+6. **不要在已运行的微信上挂调试器或改写热路径指令** —— 会导致微信崩溃。
 
 ## 7. 目录结构
 
