@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "wxarchive"
+version = "1.0.0"
+description = "微信 4.0.x 本地聊天记录导出：内存取密钥 + SQLCipher 解密 + 结构化导出"
+requires-python = ">=3.10"
+dependencies = [
+    "pycryptodome>=3.19",
+    "zstandard>=0.22",     # 消息内容为 zstd 压缩（WCDB_CT_*=4）
+]
+
+[project.scripts]
+wxarchive = "wxarchive.cli:main"
+
+[tool.setuptools]
+packages = ["wxarchive"]
