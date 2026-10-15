@@ -136,8 +136,11 @@ def cmd_chat(args):
             print("%-36s %-20s Msg_%s" % (u, (contacts.get(u) or "")[:18],
                                           hashlib.md5(u.encode()).hexdigest()))
         return 0
+    # 单会话产物统一落在 <out>\single\，与 README 及 scripts\200_analyze_style.py、
+    # scripts\202_style_report.py 的读取路径保持一致。
+    single_dir = os.path.join(out, "single")
     try:
-        payload = exp.export_one(work, out, args.chat, limit=args.limit,
+        payload = exp.export_one(work, single_dir, args.chat, limit=args.limit,
                                  strip_group_prefix=not args.keep_group_prefix,
                                  verbose=True)
     except ValueError as e:

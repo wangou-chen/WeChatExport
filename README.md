@@ -134,6 +134,10 @@ python -m wxarchive chat --chat "pubg" --limit 500       # 只要最近 500 条
 
 产物：`out\single\chat_<显示名>.json` 与 `.md`。
 
+> `chat` 的产物**固定**落在 `<out>\single\`（`--out` 只决定其父目录），不在 `out\` 根目录。
+> 下游 `scripts\200_analyze_style.py`、`scripts\202_style_report.py` 按同一路径读取。
+> `export` / `all` **不产出** `single\`，需要单会话文件就显式跑 `chat`。
+
 > **重要**：微信把**同一会话的消息表分片存放在 `message_0/1/2/3.db`**。
 > 本工具自动**合并四个分片 → 按时间排序 → 去重**。不要单独查询某个分片就当作全部记录。
 > `export` 与 `chat` 共用同一套合并逻辑（`wxarchive/export.py::_collect_sessions`），

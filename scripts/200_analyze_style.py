@@ -27,7 +27,13 @@ PUNCT = "，。！？、；：～~…—,.!?;:'\""
 
 
 def load(chat: str):
-    fs = glob.glob(os.path.join(BASE, "out", "single", "chat_%s*.json" % chat))
+    # 首选 <out>\single\（wxarchive chat 的标准产物位置）；回退兼容旧版写在 out\ 根目录的文件。
+    fs = []
+    for p in (os.path.join(BASE, "out", "single", "chat_%s*.json" % chat),
+              os.path.join(BASE, "out", "chat_%s*.json" % chat)):
+        fs = glob.glob(p)
+        if fs:
+            break
     if not fs:
         raise SystemExit("未找到导出文件：out\\single\\chat_%s*.json（先运行 wxarchive chat）" % chat)
     j = json.load(open(fs[0], encoding="utf-8"))

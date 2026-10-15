@@ -41,7 +41,14 @@ SLANG = ["我靠", "靠", "草", "淦", "绷", "绝了", "寄", "麻了", "小�
 
 
 def load(chat):
-    fs = glob.glob(os.path.join(BASE, "out", "single", "chat_%s*.json" % chat))
+    # 首选 <out>\single\（wxarchive chat 的标准产物位置）；回退兼容旧版写在 out\ 根目录的文件。
+    pats = [os.path.join(BASE, "out", "single", "chat_%s*.json" % chat),
+            os.path.join(BASE, "out", "chat_%s*.json" % chat)]
+    fs = []
+    for p in pats:
+        fs = glob.glob(p)
+        if fs:
+            break
     if not fs:
         raise SystemExit("未找到 out\\single\\chat_%s*.json（先运行 wxarchive chat）" % chat)
     return json.load(open(fs[0], encoding="utf-8"))["sessions"][0]
